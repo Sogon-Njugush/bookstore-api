@@ -3,8 +3,10 @@ dotenv.config();
 
 import express from "express";
 import connectDB from "./database/db.js";
+//import routes
+import bookRoutes from "./routes/book-routes.js";
+//create express app
 const app = express();
-
 //port
 const port = process.env.PORT || 3001;
 //connect to database
@@ -13,9 +15,9 @@ connectDB();
 //middleware
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
+// Routes
+app.use("/api/v1/books", bookRoutes);
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
