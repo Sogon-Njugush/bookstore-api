@@ -5,6 +5,7 @@ import express from "express";
 import connectDB from "./database/db.js";
 //import routes
 import bookRoutes from "./routes/book-routes.js";
+import userRoutes from "./routes/auth-routes.js";
 //create express app
 const app = express();
 //port
@@ -16,6 +17,7 @@ connectDB();
 app.use(express.json());
 
 // Routes
+app.use("/api/v1/auth", userRoutes);
 app.use("/api/v1/books", bookRoutes);
 
 app.listen(port, () => {
