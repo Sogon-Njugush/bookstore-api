@@ -1,5 +1,8 @@
 import express from "express";
-import { uploadImage } from "../controllers/image-controller.js";
+import {
+  uploadImageController as uploadImage,
+  fetchImagesController,
+} from "../controllers/image-controller.js";
 import authMiddleware from "../middleware/auth-middleware.js";
 import adminMiddleware from "../middleware/admin-middleware.js";
 import uploadMiddleware from "../middleware/upload-middleware.js";
@@ -14,5 +17,8 @@ router.post(
   uploadMiddleware.single("image"),
   uploadImage
 );
+
+//get all images
+router.get("/get", fetchImagesController);
 
 export default router;

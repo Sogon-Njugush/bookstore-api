@@ -1,35 +1,64 @@
-import image from "../models/image.js";
+import fs from "fs";
+import Image from "../models/image.js";
 import { uploadToCloudinary } from "../helpers/cloudinaryHelper.js";
 
-const uploadImage = async (req, res) => {
+const uploadImageController = async (req, res) => {
   try {
-    //check  if file is missing in return object
     if (!req.file) {
       return res.status(400).json({
         success: false,
         message: "Please upload an image!",
       });
     }
-    //upload image to cloudinary
+
     const { url, publicId } = await uploadToCloudinary(req.file.path);
-    //save image to database
-    const newImage = await image.create({
+
+    const newImage = await Image.create({
       url,
       publicId,
       uploadedBy: req.userInfo.userId,
     });
-    res.status(201).json({
+
+    fs.unlinkSync(req.file.path);
+
+    return res.status(201).json({
       success: true,
       message: "Image uploaded successfully!",
       data: newImage,
     });
   } catch (error) {
     console.error("Error uploading image:", error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "Error uploading image, please try again!",
     });
   }
 };
 
-export { uploadImage };
+const fetchImagesController = async (req, res) => {
+  try {
+    const images = await Image.find();
+
+    if (images.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No images found!",
+        data: [],
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Images fetched successfully!",
+      data: images,
+    });
+  } catch (error) {
+    console.error("Error fetching images:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error fetching images, please try again!",
+    });
+  }
+};
+
+export { uploadImageController, fetchImagesController };
