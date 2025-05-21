@@ -94,8 +94,49 @@ const loginUser = async (req, res) => {
   }
 };
 
-//const logoutUser = async (req, res) => {};
+const changePassword = async (req, res) => {
+  try {
+    const userId = req.userInfo.userId;
+    //extract user data from request body
+    const { oldPassword, newPassword } = req.body;
+
+    //check if user exists in the database
+    const checkExistingUser = await User.findById(userId);
+    if (!checkExistingUser) {
+      return res.status(404).json({
+        success: false,
+        message: "Invalid account credentials!",
+      });
+    }
+    //check if password is correct
+    const isPasswordCorrect = await bcrypt.compare(
+      oldPassword,
+      checkExistingUser.password
+    );
+    if (!isPasswordCorrect) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid login credentials!",
+      });
+    }
+    //change password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+    checkExistingUser.password = hashedPassword;
+    const updatedUser = await checkExistingUser.save();
+    return res.status(200).json({
+      success: true,
+      message: "Password changed successfully!",
+      data: updatedUser,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 //const refreshToken = async (req, res) => {};
 
-export { registerUser, loginUser };
+export { registerUser, loginUser, changePassword };

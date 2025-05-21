@@ -1,5 +1,10 @@
 import express from "express";
-import { registerUser, loginUser } from "../controllers/auth-controller.js";
+import {
+  registerUser,
+  loginUser,
+  changePassword,
+} from "../controllers/auth-controller.js";
+import authMiddleware from "../middleware/auth-middleware.js";
 
 const router = express.Router();
 
@@ -12,5 +17,7 @@ router.post("/login", loginUser);
 //router.post("/logout", logoutUser);
 //refresh token
 //router.post("/refresh-token", refreshToken);
+//update password
+router.put("/update-password", authMiddleware, changePassword);
 
 export default router;

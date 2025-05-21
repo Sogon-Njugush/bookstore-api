@@ -2,6 +2,7 @@ import express from "express";
 import {
   uploadImageController as uploadImage,
   fetchImagesController,
+  deleteImageController,
 } from "../controllers/image-controller.js";
 import authMiddleware from "../middleware/auth-middleware.js";
 import adminMiddleware from "../middleware/admin-middleware.js";
@@ -20,5 +21,13 @@ router.post(
 
 //get all images
 router.get("/get", fetchImagesController);
+
+//delete image
+router.delete(
+  "/delete/:id",
+  authMiddleware,
+  adminMiddleware,
+  deleteImageController
+);
 
 export default router;
