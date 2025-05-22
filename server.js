@@ -9,6 +9,8 @@ import userRoutes from "./routes/auth-routes.js";
 import homeRoutes from "./routes/home-route.js";
 import adminRoutes from "./routes/admin-routes.js";
 import imageRoutes from "./routes/image-routes.js";
+import productRoutes from "./routes/product-routes.js";
+import newBookRoutes from "./routes/newbook-routes.js";
 //create express app
 const app = express();
 //port
@@ -25,6 +27,8 @@ app.use("/api/v1/books", bookRoutes);
 app.use("/api/v1/home", homeRoutes);
 app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/image", imageRoutes);
+app.use("/api/v1/products", productRoutes);
+app.use("/api/v1/newbook", newBookRoutes);
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
